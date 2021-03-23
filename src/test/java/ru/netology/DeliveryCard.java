@@ -1,6 +1,7 @@
 package ru.netology;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selectors;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -17,6 +18,7 @@ public class DeliveryCard {
 
     @Test
     public void shouldSubmitRequest() {
+        Configuration.headless=true;
         open("http://localhost:9999");
         $("[placeholder='Город']").sendKeys(testData.getCity());
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
