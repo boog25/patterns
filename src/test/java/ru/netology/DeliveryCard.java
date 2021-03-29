@@ -3,38 +3,42 @@ package ru.netology;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selectors;
+import lombok.Data;
+import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.impl.Html.text;
 
+@Data
+@Value
 public class DeliveryCard {
-    TestData testData = new TestData();
+//    TestData testData = new TestData();
 
     @Test
     public void shouldSubmitRequest() {
         Configuration.headless=true;
         open("http://localhost:9999");
-        $("[placeholder='Город']").sendKeys(testData.getCity());
-        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        $("[placeholder='Дата встречи']").setValue(testData.getDatePlusThree());
-        $("[name='name']").sendKeys(testData.enterName());
-        $("[name='phone']").sendKeys(testData.enterPhone());
+        $("[placeholder='Город']").sendKeys(TestData.getCity());
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(TestData.setDate(3));
+        $("[name='name']").sendKeys(TestData.enterName());
+        $("[name='phone']").sendKeys(TestData.enterPhone());
         $("[class='checkbox__box']").click();
         $(byText("Запланировать")).click();
-        $(withText("Успешно!")).shouldBe(Condition.visible, Duration.ofSeconds(16));
-        $("[placeholder='Дата встречи']").doubleClick().sendKeys(testData.getDatePlusThree());
+        $(Selectors.withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $("[placeholder='Дата встречи']").doubleClick().sendKeys(TestData.setDate(6));
         $(byText("Запланировать")).click();
-        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        $("[placeholder='Дата встречи']").setValue(testData.getDatePlusSix());
         $(byText("Перепланировать")).click();
-        $(withText("Встреча успешно запланирована на")).shouldBe(Condition.visible, Duration.ofSeconds(15));
-        $(withText(testData.getDatePlusSix())).shouldBe(Condition.visible, Duration.ofSeconds(15));
+        $(Selectors.withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $("[data-test-id=success-notification] .notification__content").shouldHave(text(TestData.setDate(6)));
 
     }
 

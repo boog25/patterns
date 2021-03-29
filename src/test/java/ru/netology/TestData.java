@@ -12,38 +12,34 @@ import java.util.Random;
 @Data
 @Value
 public class TestData {
-    public String enterName() {
+    private TestData() {
+    }
+
+
+    public static String enterName(){
         Faker faker = new Faker(new Locale("ru"));
-        String name = faker.name().fullName();
+        String name = faker.name().firstName();
         return name;
     }
 
-    public String enterPhone() {
+    public static String enterPhone()  {
         Faker faker = new Faker(new Locale("ru"));
         String phone = faker.numerify("+7##########");
         return phone;
-
     }
 
-    public String getCity() {
-        String[] city = {"Москва", "Кемерово", "Смоленск", "Тамбов", "Казань", "Махачкала", "Курган"};
+    public static String getCity(){
+        String[] city = { "Майкоп", "Уфа", "Нальчик", "Якутск", "Казань", "Кызыл", "Магас"};
         int rnd = new Random().nextInt(city.length);
         return city[rnd];
     }
 
-    public static String getDatePlusThree() {
-        LocalDate date = LocalDate.now();
-        LocalDate dateDelivery = date.plusDays(3);
-        DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dataText = dateDelivery.format(formatters);
-        return dataText;
-    }
 
-    public static String getDatePlusSix() {
-        LocalDate date = LocalDate.now();
-        LocalDate dateDelivery = date.plusDays(6);
-        DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String dataText = dateDelivery.format(formatters);
-        return dataText;
+    public static String setDate(long plusDay) {
+        String date = LocalDate
+                .now()
+                .plusDays(plusDay)
+                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        return date;
     }
 }
